@@ -1,0 +1,139 @@
+setwd("A:\\DR.Diop\\FHL_LLM\\unzip 20068-201207")
+library(sqldf)
+library(RSQLite)
+for (year in c(200806,200807,200808,200809,200810,200811,200812,200901,200902,200903,200904,200905,200906,200907,200909,200910,200911,200912,201010,201011,201201,201202,201203,201205,201206,201207,201208)){
+  nam= paste("FHL",year,sep="")
+  x=as.character(paste("FHL",year,sep=""))
+  print(nam)
+  nn<- read.delim(file=sprintf("%s.DAT",year,sep=""),header=F,sep="|",dec=".",stringsAsFactors = F)
+  #print(nn,n=10)
+  assign(nam,nn)
+  df <- dbConnect(SQLite(),"states.db")
+  dbWriteTable(df,"FHL",nn,overwrite=T)
+  new= paste("new",year,sep="")
+  #print(new,n=10)
+  ne <- sqldf(sprintf("SELECT V2,V3,V12,V18 FROM '%s' WHERE V5='FIX' AND V8='R' AND V9='SF' AND V10='O' AND V11='1' AND V13>630 AND V25 BETWEEN 166000 AND 250000",x,sep=""))
+  # print(ne,n=10)
+  assign(new,ne)
+  
+  write.csv(ne,file=("V2V3V12V18%s.csv",year,sep=""),row.names=F)
+  print("CSV is ready")
+  dbRemoveTable(df,"FHL")
+  assign(new,ne)
+  #x=as.character(paste("FHL",year,sep=""))
+  rm(list = ls())
+}
+
+for (year in c(200608,200609,200610,200611,200612,200701,200702,200703,200704,200705,200706,200707,200708,200709,200710,200711,200712,200801,200802,200803,200804,200805)){
+  nam= paste("FHL",year,sep="")
+  x=as.character(paste("FHL",year,sep=""))
+  print(nam)
+  nn<- read.delim(file=sprintf("%s.DAT",year,sep=""),header=F,sep="|",dec=".",stringsAsFactors = F)
+  #print(nn,n=10)
+  assign(nam,nn)
+  df <- dbConnect(SQLite(),"fhl.db")
+  dbWriteTable(df,"FHL",nn,overwrite=T)
+  new= paste("new",year,sep="")
+  #print(new,n=10)
+  ne <- sqldf(sprintf("SELECT V2,V3,V12,V18 FROM '%s' WHERE V5='FIX' AND V8='N' AND V9='SF' AND V10='O' AND V11='1' AND V13>630 AND V25 BETWEEN 166000 AND 250000",x,sep=""))
+  # print(ne,n=10)
+  assign(new,ne)
+  
+  write.csv(ne,file=sprintf("V2V3V12V18%s.csv",year,sep=""),row.names=F)
+  print("CSV is ready")
+  dbRemoveTable(df,"FHL")
+  assign(new,ne)
+  #x=as.character(paste("FHL",year,sep=""))
+  rm(list = ls())
+
+}
+
+data <- list() 
+for (year in c(200608,200609,200610,200611,200612,200701,200702,200703,200704,200705,200706,200707,200708,200709,200710,200711,200712,200801,200802,200803,200804,200805,200806,200807,200808,200809,200810,200811,200812,200901,200902,200903,200904,200905,200906,200907,200909,200910,200911,200912,201010,201011,201201,201202,201203,201205,201206,201207,201208)){
+  data[[year]] <-read.csv(file=sprintf("V2V3V12V18%s.csv",year,sep=""),header=T) 
+}
+V2V3V12V18 <-  rbind.fill(data)
+write.csv(V2V3V12V18,"V2V3V12V18.csv",row.names=F)
+##########################################################
+#head(do.call(rbind, data))
+#install.packages("data.table")
+#library(data.table)
+#library(plyr)
+#setwd("A:\\DR.Diop\\FHL_LLM\\V2V13V15V25")
+data <- list() 
+for (year in c(200608,200609,200610,200611,200612,200701,200702,200703,200704,200705,200706,200707,200708,200709,200710,200711,200712,200801,200802,200803,200804,200805,200806,200807,200808,200809,200810,200811,200812,200901,200902,200903,200904,200905,200906,200907,200909,200910,200911,200912,201010,201011,201201,201202,201203,201205,201206,201207,201208)){
+  data[[year]] <-read.csv(file=sprintf("V2V13V15V25%s.csv",year,sep=""),header=T) 
+}
+V2V13V15V25 <-  rbind.fill(data)
+##################################
+library(data.table)
+<- rbindlist(data)
+
+
+> head(ldply(data, rbind))
+> head(rbind.fill(data))
+###############################################################
+
+library(lubridate)
+last <- ifelse(newdata$V2!=lag(loanseqdate),1,0)
+month<-month(date)
+yy <- year(date)
+
+notterm<- ifelse(last==1 & month==7 & yy==2012,1,0 )
+
+#Tterm <- ifelse(!duplicated(V2),1,0)
+notterm <- V2V3V12V18$notterm
+newdata$Tterm <- ifelse(last==1& notterm!=1,1,0)
+##############
+as.Date(as.character(20130107), "%Y%m%d")
+##############################################
+# sorting examples using the mtcars dataset
+attach(mtcars)
+
+# sort by mpg
+newdata <- mtcars[order(mpg),] 
+
+# sort by mpg and cyl
+newdata <- mtcars[order(mpg, cyl),]
+
+#sort by mpg (ascending) and cyl (descending)
+newdata <- mtcars[order(mpg, -cyl),] 
+
+ot <- sub("[M]","20", m) m is the data part of it 
+####################################################
+library(sqldf)
+library(RSQLite)
+ df <- dbConnect(SQLite(),"states.db")
+ states$Month <- NULL
+ dbWriteTable(df,"states",states)
+new$V32<- as.Date(as.character(new$V18), "%Y%m%d")
+
+library(lubridate)
+new$mmm <- month(new$V32)
+new$yyy <- year(new$V32)
+###############
+HPI <- function (neww){
+  #V31<- as.Date(as.character(new$V3), "%Y%m%d")
+  
+  # library(lubridate)
+  # new$mm <- month(new$V31)
+  # new$yy <- year(V2V3V12V18$V31)
+  
+  for (i in neww$V12)
+  {
+    if(as.character(i)=="PR")
+    {
+      return("NA")
+    }
+    else
+    {
+      st=as.character(neww$V12)
+      mm=as.character(neww$mm)
+      yy=as.character(neww$yy)
+      xx <- sqldf(sprintf("SELECT %s FROM states WHERE mm='%s' AND yy=%s",st,mm,yy,sep=""))
+      
+      return (as.numeric(xx)) }
+    
+  }
+}
+
